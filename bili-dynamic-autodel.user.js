@@ -316,7 +316,7 @@
      * 取关用户
      */
     function unfollowUser() {
-        let unfollow_api = 'https://api.bilibili.com/x/relation/modify',
+        let unfollow_api = 'https://api.bilibili.com/x/relation/modify?statistics=%7B%22appId%22:100,%22platform%22:5%7D&x-bili-device-req-json=%7B%22platform%22:%22web%22,%22device%22:%22pc%22,%22spmid%22:%22333.1387%22%7D',
             unfollow_list = GM_getValue('unfollow-list');
 
         for (let uid of unfollow_list) {
@@ -324,12 +324,21 @@
             axios({
                 method: 'post',
                 url: unfollow_api,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
                 withCredentials: true,
                 data: {
                     fid: uid,
                     act: 2,
                     re_src: 11,
-                    spmid: '333.999.0.0',
+                    gaia_source: 'web_main',
+                    is_from_frontend_component: true,
+                    extend_content: {
+                        entity: 'user',
+                        entity_id: uid
+                    },
+                    spmid: '333.1387',
                     csrf: getCookie(' bili_jct')
                 }
             })
